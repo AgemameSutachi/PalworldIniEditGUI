@@ -1,36 +1,36 @@
 import os
 import logging
-import os
 from datetime import datetime
-import logging
 from logging import Formatter
-from logging import INFO, DEBUG, NOTSET
+from logging import DEBUG, INFO, WARNING, ERROR, CRITICAL, NOTSET
 from rich.logging import RichHandler
 from logging.handlers import RotatingFileHandler
+import sys
 
 # ストリームハンドラの設定
-rich_handler: RichHandler = RichHandler(rich_tracebacks=True)
+rich_handler = RichHandler(rich_tracebacks=True)
 rich_handler.setLevel(INFO)
-# rich_handler.setLevel(DEBUG)
 rich_handler.setFormatter(Formatter("%(message)s"))
 
 # 保存先の有無チェック
 if not os.path.isdir('./Log'):
     os.makedirs('./Log', exist_ok=True)
+    
+debug_handler = RotatingFileHandler("./Log/debug.log", "a", maxBytes=1000000, backupCount=10)
+debug_handler.setLevel(DEBUG)
+debug_handler.setFormatter(Formatter("%(asctime)s [%(levelname).4s] %(filename)s %(funcName)s %(lineno)d: %(message)s"))
 
-# ファイルハンドラの設定
-file_handler = RotatingFileHandler(f"./Log/{datetime.now():%Y-%m-%d}.log","a", maxBytes=1000000, backupCount=10)
-file_handler.setLevel(DEBUG)
-file_handler.setFormatter(
-    # Formatter("%(asctime)s [%(levelname).4s] %(filename)s %(funcName)s %(lineno)d: %(message)s")
-    Formatter("%(asctime)s [%(levelname)s] %(filename)s %(funcName)s %(lineno)d: %(message)s")
-)
+# INFO ログ用のハンドラとフォーマッター
+info_handler = RotatingFileHandler("./Log/info.log", "a", maxBytes=1000000, backupCount=10)
+info_handler.setLevel(INFO)
+info_handler.setFormatter(Formatter("%(asctime)s [%(levelname).4s] %(filename)s %(funcName)s %(lineno)d: %(message)s"))
 
 # ルートロガーの設定
-logging.basicConfig(level=NOTSET, handlers=[rich_handler, file_handler])
+logging.basicConfig(level=NOTSET, handlers=[rich_handler, debug_handler,info_handler])
 
 def getLogger():
     return logging.getLogger(__name__)
+
 
 def log_decorator(logger):
     def _log_decorator(func):
