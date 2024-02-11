@@ -178,7 +178,7 @@ class GUI:
             self.dlg_progress.update()
             
             try:
-                res=subprocess.run([self.shutdownExePath,"1"])
+                res=subprocess.run([self.shutdownExePath,"1","5"])
                 # if res.returncode:
                 #     logger.error("サーバーシャットダウン中にエラー発生")
                 #     self.progress_str_list[1].set(self.progress_str_list[1].get()+"…エラー")
