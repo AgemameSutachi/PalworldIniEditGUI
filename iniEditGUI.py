@@ -31,7 +31,7 @@ default_config_dic = {
 
 Cl_Con = ConfigManager(
     default_dic=default_config_dic,
-    config_path="./palserver_monitor.ini",
+    config_path="./iniEditGUI.ini",
     encoding="cp932",
 )
 
